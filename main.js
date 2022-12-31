@@ -167,8 +167,17 @@ const loadData = async() => {
     loadFiveDayForecast(hourlyForecast);
 }
 
-document.addEventListener("DOMContentLoaded", async() => {
+const loadForecastUsingGeoLocation = () => {
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+        const { latitude: lat, longitude: lon} = coords;
+        selectedCity = {lat, lon};
+        loadData();
+    }, error => console.log(error))
+}
 
+document.addEventListener("DOMContentLoaded", async() => {
+    loadForecastUsingGeoLocation();
+    
     const searchInput = document.querySelector("#search");
     searchInput.addEventListener("input", debounceSearch);
     searchInput.addEventListener("change", handleCitySelection);
