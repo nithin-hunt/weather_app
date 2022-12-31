@@ -27,8 +27,8 @@ p {
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    width: 400px;
-    margin: auto;
+    max-width: 800px;
+    margin: var(--spacing-regular);
 }
 
 .container{
@@ -149,3 +149,15 @@ body {
     text-transform: capitalize;
     justify-self: start;
 } 
+
+
+@media (width>=650px) {
+    .container{
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas:
+        "search search search search"
+        "current current current current "
+        "feelslike humidity fiveday fiveday"
+        "hourly hourly fiveday fiveday";
+    }
+}
