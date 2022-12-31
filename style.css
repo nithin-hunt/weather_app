@@ -35,10 +35,11 @@ body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
+    "search search"
     "current current"
+    "feelslike humidity"
     "hourly hourly"
-    "fiveday fiveday"
-    "feelslike humidity";
+    "fiveday fiveday";
     gap: var(--spacing-regular);
 }
 
@@ -47,6 +48,13 @@ body {
     border: 1px solid;
     border-radius: var(--spacing-regular);
     padding: var(--spacing-regular);
+}
+
+#search {
+    grid-area: search;
+    font-size: var(--font-large);
+    border-radius: var(--spacing-regular);
+    padding: var(--spacing-medium);
 }
 #current-forecast{
     grid-area: current;
@@ -66,6 +74,16 @@ body {
     font-weight: var(--font-semibold);
 }
 
+#feels-like{
+    grid-area: feelslike;
+    text-align: center;
+}
+
+#humidity {
+    grid-area: humidity;
+    text-align: center;
+}
+
 #hourly-forecast{
     grid-area: hourly;
     text-align: center;
@@ -78,10 +96,6 @@ body {
     grid-auto-columns: minmax(100px, 1fr);
     overflow-x: auto;
     gap: var(--spacing-medium)
-}
-
-#hourly-forecast .hourly-container .time  {
-
 }
 
 #hourly-forecast .hourly-container .icon {
@@ -135,14 +149,3 @@ body {
     text-transform: capitalize;
     justify-self: start;
 } 
-
-
-#feels-like{
-    grid-area: feelslike;
-    text-align: center;
-}
-
-#humidity {
-    grid-area: humidity;
-    text-align: center;
-}
