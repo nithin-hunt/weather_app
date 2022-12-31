@@ -177,7 +177,7 @@ const loadForecastUsingGeoLocation = () => {
 
 document.addEventListener("DOMContentLoaded", async() => {
     loadForecastUsingGeoLocation();
-    
+
     const searchInput = document.querySelector("#search");
     searchInput.addEventListener("input", debounceSearch);
     searchInput.addEventListener("change", handleCitySelection);
