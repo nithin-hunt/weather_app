@@ -27,15 +27,23 @@ const loadCurrentForecast = ({ name, main: {temp, temp_max, temp_min}, weather: 
     currentForecastElement.querySelector(".description").textContent = description;
     currentForecastElement.querySelector(".min-max-temp").textContent = `H: ${formatTemperature(temp_max)} L:${formatTemperature(temp_min)}`;
 }
-const loadHourlyForecast = (hourlyForecast) => {
-    let dataFor12Hours = hourlyForecast.slice(1,13);
+const loadHourlyForecast = ({main: {temp: tempNow}, weather: [{icon: iconNow}]}, hourlyForecast) => {
+    const timeFormatter = Intl.DateTimeFormat("en", {
+        hour12:true, hour:"numeric"
+    })
+    let dataFor12Hours = hourlyForecast.slice(2,14);
     const hourlyContainer = document.querySelector(".hourly-container");
-    let innerHTMLString = ``;
+    let innerHTMLString = 
+        `<article>
+         <h3 class="time">Now</h3>
+         <img src="${createIconUrl(iconNow)}" alt="weather-icon" class="icon" />
+         <p class="hourly-temp">${formatTemperature(tempNow)}</p>
+         </article>`;
 
     for(let {temp, icon, dt_txt} of dataFor12Hours){
         innerHTMLString += 
         `<article>
-         <h3 class="time">${dt_txt.split(" ")[1]}</h3>
+         <h3 class="time">${timeFormatter.format(new Date(dt_txt))}</h3>
          <img src="${createIconUrl(icon)}" alt="weather-icon" class="icon" />
          <p class="hourly-temp">${formatTemperature(temp)}</p>
          </article>`
@@ -102,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     const currentWeather =  await getCurrentWeatherData();
     loadCurrentForecast(currentWeather);
     const hourlyForecast = await getHourlyForecast(currentWeather);
-    loadHourlyForecast(hourlyForecast);
+    loadHourlyForecast(currentWeather, hourlyForecast);
     loadFiveDayForecast(hourlyForecast);
     loadFeelsLike(currentWeather);
     loadHumidity(currentWeather);
