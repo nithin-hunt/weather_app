@@ -24,11 +24,13 @@ h2 {
 p {
     margin: var(--spacing-medium);
 }
+
 body {
-    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     max-width: 800px;
     margin: var(--spacing-regular);
+    background: radial-gradient( rgba(0,82,212,1) 0%, rgba(67,100,247,1) 75%, rgba(111,177,252,1) 120%);
+    color: aliceblue;
 }
 
 .container{
@@ -45,7 +47,7 @@ body {
 
 .container,
 .container > article {
-    border: 1px solid;
+    border: 3px solid rgba(0, 0, 0, 0.5);
     border-radius: var(--spacing-regular);
     padding: var(--spacing-regular);
 }
@@ -55,24 +57,31 @@ body {
     font-size: var(--font-large);
     border-radius: var(--spacing-regular);
     padding: var(--spacing-medium);
+    background-color: aliceblue;
+    /* opacity: 90%; */
 }
 #current-forecast{
     grid-area: current;
     text-align: center;
+    height: 270px;;
 }
 
+#current-forecast .city {
+    position: static;
+}
 #current-forecast .temp {
     font-size: var(--font-xl);
+    position: relative;
+    top: 15px;
 }
+
 #current-forecast .description {
     font-size: var(--font-regular);
     font-weight: var(--font-semibold);
     text-transform: capitalize;
-}
-#current-forecast .min-max-temp {
-    font-size: var(--font-regular);
-    font-weight: var(--font-semibold);
-}
+    position: relative;
+    top: -25px;
+} 
 
 #feels-like{
     grid-area: feelslike;
@@ -82,6 +91,12 @@ body {
 #humidity {
     grid-area: humidity;
     text-align: center;
+}
+
+.feels-like-temp,
+.humidity-value {
+    font-size: var(--font-large);
+    margin-top: 20px;;
 }
 
 #hourly-forecast{
@@ -133,7 +148,7 @@ body {
 }
 
 .five-day-forecast-container .day-wise-forecast .min-temp {
-    opacity: 50%;
+    opacity: 75%;
 }
 
 .five-day-forecast-container .day-wise-forecast .max-temp {
@@ -152,6 +167,10 @@ body {
 
 
 @media (width>=650px) {
+   body {
+        margin: 50px auto;
+        background: radial-gradient(rgba(0,82,212,1) 0%, rgba(67,100,247,1) 70%, rgba(111,177,252,1) 180%);
+    }
     .container{
         grid-template-columns: repeat(4, 1fr);
         grid-template-areas:

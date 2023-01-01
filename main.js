@@ -9,56 +9,15 @@ const getCitiesUsingGeolocation = async (searchText) => {
     return respnse.json();
 }
 
-function debounce(func) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-            func.apply(this, args)
-        }, 500);
-    }
-}
-
-const onSearchChange = async (event) => {
-    let {value} = event.target;
-    if(!value) {
-        selectedCity = null;
-        selectedCityText = "";
-    }
-    if(value && selectedCityText !== value) {
-        const listOfCities = await getCitiesUsingGeolocation(value);
-        let options = "";
-        for (let {lat, lon, name, state, country} of listOfCities) {
-            options += `<option data-city-details ='${JSON.stringify({lat, lon, name})}' value="${name}, ${state}, ${country}"></option>`
-        }
-        document.querySelector("#cities").innerHTML = options;
-        console.log(listOfCities);
-    }
-}
-
-const handleCitySelection = (event) => {
-    selectedCityText = event.target.value;
-    let options = document.querySelectorAll("#cities > option");
-    console.log(options);
-    if (options?.length) {
-        let selectedOption = Array.from(options).find(opt => opt.value === selectedCityText);
-        selectedCity = JSON.parse(selectedOption.getAttribute("data-city-details"));
-        console.log({selectedCity});
-        loadData();
-    }
-
-}
-
-const debounceSearch = debounce((event) => onSearchChange(event));
-
 const getCurrentWeatherData = async({lat, lon, name: city}) => {
     const url = lat&&lon ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric` : `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
     const response = await fetch(url);
     return response.json();
 }
 
-const getHourlyForecast = async ({name: city})=> {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`)
+const getHourlyForecast = async ({lat, lon, name: city})=> {
+    const url = lat&&lon ? `api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metrics` : `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+    const response = await fetch(url)
     const data = await response.json();
     return data.list.map(forecast => {
         const {main: {temp, temp_min, temp_max}, dt, dt_txt, weather: [{description,icon}]} = forecast;
@@ -69,12 +28,12 @@ const getHourlyForecast = async ({name: city})=> {
 const formatTemperature = (temp) => `${temp?.toFixed(1)}°`;
 const createIconUrl = (icon) =>  `http://openweathermap.org/img/wn/${icon}@2x.png`
 
-const loadCurrentForecast = ({ name, main: {temp, temp_max, temp_min}, weather: [{description}] }) => {
+const loadCurrentForecast = ({ name, main: {temp, temp_max, temp_min}, weather: [{description, icon}] }) => {
     const currentForecastElement = document.getElementById("current-forecast");
     currentForecastElement.querySelector(".city").textContent = name;
     currentForecastElement.querySelector(".temp").textContent = formatTemperature(temp);
+    currentForecastElement.querySelector(".icon").src = `${createIconUrl(icon)}`;
     currentForecastElement.querySelector(".description").textContent = description;
-    currentForecastElement.querySelector(".min-max-temp").textContent = `H: ${formatTemperature(temp_max)} L:${formatTemperature(temp_min)}`;
 }
 
 const loadFeelsLike = ({main: {feels_like}}) => {
@@ -159,6 +118,7 @@ const loadFiveDayForecast = (hourlyForecast) => {
 
 const loadData = async() => {
     const currentWeather =  await getCurrentWeatherData(selectedCity);
+    console.log(currentWeather)
     loadCurrentForecast(currentWeather);
     loadFeelsLike(currentWeather);
     loadHumidity(currentWeather);
@@ -174,6 +134,48 @@ const loadForecastUsingGeoLocation = () => {
         loadData();
     }, error => console.log(error))
 }
+
+function debounce(func) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this, args)
+        }, 500);
+    }
+}
+
+const onSearchChange = async (event) => {
+    let {value} = event.target;
+    if(!value) {
+        selectedCity = null;
+        selectedCityText = "";
+    }
+    if(value && selectedCityText !== value) {
+        const listOfCities = await getCitiesUsingGeolocation(value);
+        let options = "";
+        for (let {lat, lon, name, state, country} of listOfCities) {
+            options += `<option data-city-details ='${JSON.stringify({lat, lon, name})}' value="${name}, ${state}, ${country}"></option>`
+        }
+        document.querySelector("#cities").innerHTML = options;
+        console.log(listOfCities);
+    }
+}
+
+const handleCitySelection = (event) => {
+    selectedCityText = event.target.value;
+    let options = document.querySelectorAll("#cities > option");
+    console.log(options);
+    if (options?.length) {
+        let selectedOption = Array.from(options).find(opt => opt.value === selectedCityText);
+        selectedCity = JSON.parse(selectedOption.getAttribute("data-city-details"));
+        console.log({selectedCity});
+        loadData();
+    }
+
+}
+
+const debounceSearch = debounce((event) => onSearchChange(event));
 
 document.addEventListener("DOMContentLoaded", async() => {
     loadForecastUsingGeoLocation();
