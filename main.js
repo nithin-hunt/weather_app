@@ -32,8 +32,9 @@ const loadCurrentForecast = ({ name, main: {temp, temp_max, temp_min}, weather: 
     const currentForecastElement = document.getElementById("current-forecast");
     currentForecastElement.querySelector(".city").textContent = name;
     currentForecastElement.querySelector(".temp").textContent = formatTemperature(temp);
-    currentForecastElement.querySelector(".icon").src = `${createIconUrl(icon)}`;
-    currentForecastElement.querySelector(".description").textContent = description;
+    currentForecastElement.querySelector(".current-forecast-info").innerHTML = 
+    `<img src="${createIconUrl(icon)}" alt="weather-icon" class="icon"/>
+     <p class="description">${description}</p>`
 }
 
 const loadFeelsLike = ({main: {feels_like}}) => {
