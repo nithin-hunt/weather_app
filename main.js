@@ -16,7 +16,7 @@ const getCurrentWeatherData = async({lat, lon, name: city}) => {
 }
 
 const getHourlyForecast = async ({lat, lon, name: city})=> {
-    const url = lat&&lon ? `api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metrics` : `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
+    const url = lat&&lon ? `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric` : `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`;
     const response = await fetch(url)
     const data = await response.json();
     return data.list.map(forecast => {
@@ -123,7 +123,7 @@ const loadData = async() => {
     loadCurrentForecast(currentWeather);
     loadFeelsLike(currentWeather);
     loadHumidity(currentWeather);
-    const hourlyForecast = await getHourlyForecast(currentWeather);
+    const hourlyForecast = await getHourlyForecast(selectedCity);
     loadHourlyForecast(currentWeather, hourlyForecast);
     loadFiveDayForecast(hourlyForecast);
 }
