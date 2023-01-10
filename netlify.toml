@@ -1,0 +1,5 @@
+[[redirects]]
+from = "/*"
+to = "https://www.nithinravi.com/project/weather-app/:splat"
+status = 301
+force = true
